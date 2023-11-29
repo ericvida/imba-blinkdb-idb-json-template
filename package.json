@@ -1,0 +1,44 @@
+{
+  "name": "imba-blinkdb-json-template",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "pm2 start ecosystem.config.js --env production",
+    "reload": "npm run build && pm2 reload ecosystem.config.js",
+    "dev": "imba -wdvsM server.imba",
+    "build": "imba build server.imba"
+  },
+  "engines": {
+    "node": ">=16.17.0",
+    "npm": ">=8.15.0"
+  },
+  "dependencies": {
+    "blinkdb": "^0.14.0",
+    "cheffydb": "^1.0.5",
+    "express": "^4.18.2",
+    "imba": "^2.0.0-alpha.231",
+    "nanoid": "^5.0.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21"
+  },
+  "description": "_Bootstrapped with [imba-base-template](https://github.com/imba/imba-base-template)._",
+  "version": "1.0.0",
+  "main": "ecosystem.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericvida/imba-blinkdb-json-template.git"
+  },
+  "keywords": [
+    "imba",
+    "blinkdb",
+    "json",
+    "express",
+    "node"
+  ],
+  "author": "Eric Vida",
+  "bugs": {
+    "url": "https://github.com/ericvida/imba-blinkdb-json-template/issues"
+  },
+  "homepage": "https://github.com/ericvida/imba-blinkdb-json-template#readme"
+}
