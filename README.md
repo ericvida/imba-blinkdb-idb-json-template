@@ -1,7 +1,7 @@
 _Bootstrapped with [imba-base-template](https://github.com/imba/imba-base-template)._
 
 # Imba + BlinkDB
-An Imba starter template with BlinkDB for blazing fast client-side data, and json file persistence
+An [Imba](https://imba.io) starter template with [BlinkDB](https://blinkdb.io/) for blazing fast client-side data, and json file persistence
 
 This codebase has both backend and frontend code, all written in [Imba](https://imba.io).
 
