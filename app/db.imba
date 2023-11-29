@@ -30,12 +30,6 @@ import {nanoid} from 'nanoid'
 let BDB = createDB();
 export let wordTable = createTable(BDB, "words")();
 
-# await insertMany(wordTable, [
-# 	{ id: nanoid!, word: "hello", definition: "used as a greeting or to begin a telephone conversation." },
-# 	{ id: nanoid!, word: "world", definition: "the earth, together with all of its countries and peoples." },
-# ])
-
-
 class BlinkDB
 	def loadDictionaryFromJson
 		# NOTE: loads Words from Json
@@ -69,10 +63,6 @@ class BlinkDB
 
 export let db = new BlinkDB(wordTable)
 
-let dispose = await watch wordTable, {}, do(dictionary)
-	state.dictionary = dictionary
-	db.saveDictionaryToJson(dictionary)
-	imba.commit!
 
 
 extend tag Element

@@ -23,6 +23,11 @@ tag my-first-imba-app
 			if json.length > 0
 				await insertMany(wordTable, json) # update BlinkDB
 				imba.commit!
+		let dispose = await watch wordTable, {}, do(dictionary)
+			state.dictionary = dictionary
+			db.saveDictionaryToJson(dictionary)
+			imba.commit!
+
 
 	def addWord newWord
 		if newWord.name is "" or newWord.definition is ""
