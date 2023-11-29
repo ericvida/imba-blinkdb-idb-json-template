@@ -3,10 +3,22 @@ _Bootstrapped with [imba-base-template](https://github.com/imba/imba-base-templa
 # Imba + BlinkDB
 An [Imba](https://imba.io) starter template with [BlinkDB](https://blinkdb.io/) for blazing fast client-side data, and json file persistence
 
-This codebase has both backend and frontend code, all written in [Imba](https://imba.io).
+It's perfect for creating offline data json data management apps.
+Or for quickly building client-side app.
 
-The files are named `server.imba` and `client.imba` for simplicity. You can call them anything you want, and organize the code any way you like. As long as your `package.json` [uses your server file](https://github.com/imba/imba-base-template/blob/main/package.json#L4-L6) and your `index.html` [uses your client file](https://github.com/imba/imba-base-template/blob/main/app/index.html#L12), it will work.
+## To use
 
+Change directory to your desired directory for your new project.
+### `cd ./Desktop/`
+
+clone repo
+### `git clone https://github.com/ericvida/imba-blinkdb-json-template.git imba-blinkdb-json`
+
+## Install Dependencies
+
+### `npm install`
+
+You may replace `imba-blinkdb-json` for any folder name you'd like.
 
 ## Available Scripts
 
