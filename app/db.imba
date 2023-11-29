@@ -26,10 +26,34 @@ import {
 	isValidEntity,
 	uuid
 } from "blinkdb";
+
+
 import {nanoid} from 'nanoid'
 let BDB = createDB();
 export let wordTable = createTable(BDB, "words")();
 
+
+let localStorageKey = 'imba-blinkdb-ls-json'
+
+export def persist data
+	localStorage.setItem localStorageKey, JSON.stringify(data)
+	
+export def loadLocalData
+	let dataString = localStorage.getItem localStorageKey
+	if dataString
+		try
+			JSON.parse(dataString)
+		catch
+			return [] # if error loading data, return empty array
+	else
+		return [] # id no data stored, return empty array
+
+export def clearData
+	localStorage.removeItem(localStorageKey)
+export def loadMemData
+	let dataArray = await many(wordTable)
+	return dataArray
+	
 class BlinkDB
 	def loadDictionaryFromJson
 		# NOTE: loads Words from Json
