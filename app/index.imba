@@ -88,6 +88,7 @@ tag offline-dictionary
 							py:1sp
 					<input bind=wordQuery @keydown.enter=addWord placeholder="new word | search">
 					<input bind=definitionQuery @keydown.enter=addWord placeholder="definition">
+					# FIXME: Clicking on Add Button doesn't have same effect as hitting Enter.
 					<button @dblclick.addWord> 
 						css h:100%
 							w:150px
