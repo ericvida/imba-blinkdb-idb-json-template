@@ -7,12 +7,12 @@ const port = process.env.PORT or 3000
 
 # Express works like usual, so we can allow JSON in the POST request:
 const jsonBody = express.json({ limit: '20kb' })
-app.post('/saveDictionary', jsonBody, do(req,res)
+app.post('/setWords', jsonBody, do(req,res)
 	cheffy.set("dictionary", req.body)
 	return req.body
 )
 
-app.get('/loadDictionary') do(req,res)
+app.get('/loadWords') do(req,res)
 	let dictionary = await cheffy.get("dictionary")
 	res.send dictionary
 
