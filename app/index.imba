@@ -1,3 +1,7 @@
+### TODO:
+[ ] Add session persistence via IndexedDB instead
+[ ] and manual json load and backup
+###
 import 'imba/preflight.css'
 import {normalizeText as normalize} from 'normalize-text'
 global css 
@@ -102,11 +106,11 @@ tag offline-dictionary
 				c:cool9
 				d:vflex g:1sp
 				mih:100vh
-			<h1> "Imba + BlinkDB + IndexedDB + JSON"
+			<h1> "Imba + BlinkDB + JSON Persistence"
 				css fs:4xl
 					fw:bold
 					ff:sans
-			<p> "A starter template for incredibly fast offline web-apps {<br>} with session persistence via IndexedDB and manual JSON data backup."
+			<p> "A starter template for incredibly fast offline web-apps {<br>} with session persistence via JSON and manual JSON data backup."
 				css mb:4sp
 			<div>
 				css d:hflex g:1sp jc:end w:100%
