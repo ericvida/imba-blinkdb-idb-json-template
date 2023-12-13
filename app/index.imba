@@ -1,4 +1,5 @@
 import 'imba/preflight.css'
+import {normalizeText as normalize} from 'normalize-text'
 global css 
 	@root 
 		fs:sm
@@ -11,53 +12,89 @@ global css
 		c:cool8 @hover:hue8
 	* rd:0.5sp
 import {nanoid} from 'nanoid'
-import './DB_INDB'
 import './DB_BLINK'
-import './DB_JSON'
 import './DB_APP'
 
 tag offline-dictionary
 	# NOTE: EXPERIMENTAL BELOW
+	@observable editWord = {}
 	@observable wordQuery = ""
 	@observable definitionQuery = ""
 	@autorun def search
 		if wordQuery isnt ""
 			if definitionQuery isnt ""
-				APP.filtered_words = APP.words.filter(do(word) 
-					word.name.includes wordQuery and word.definition.includes definitionQuery)
-			APP.filtered_words = APP.words.filter(do(word) 
-				word.name.includes wordQuery)
+				### NOTE
+				if both word & definition queries are full
+				search match for both
+				###
+				APP.filtered_words = APP.words.filter do 
+					if normalize($1.definition).includes normalize(definitionQuery)
+						normalize($1.name).includes normalize(wordQuery)
+			else
+				### NOTE
+				if wordQuery is full
+				search match for wordQuery only
+				###
+				APP.filtered_words = APP.words.filter(do normalize($1.name).includes normalize(wordQuery))
 		elif definitionQuery isnt ""
-				APP.filtered_words = APP.words.filter(do(word) 
-					word.name.includes definitionQuery)
+			### NOTE
+			if word query is not full
+			and only definition query is full
+			search by definition query only
+			###
+			APP.filtered_words = APP.words.filter(do normalize($1.definition).includes normalize(definitionQuery))
 		else
+			### NOTE
+			if word & def query are empty
+			show all words
+			###
 			APP.filtered_words = APP.words
 		imba.commit!
+		
 	# NOTE: EXPERIMENTAL ABOVE
-	def clear
-		APP.clear!
-		APP.sync!
+	def clearAll
+		L 'clear not setup'
+		APP.clearAll!
 		imba.commit!
+	def addOrSaveWord
+		if editWord.id is undefined
+			addWord!
+		else
+			saveWordEdit!
+			L 'edit saved'
 	def addWord
 		newWord = {
-			id: nanoid()
+			id: nanoid!
+			stamp: stampString!
 			name: wordQuery
 			definition: definitionQuery
 		}
-		BLINK.insert newWord
+		# L 'clicked addWord', newWord
+		APP.addWord newWord
 		wordQuery = ""
 		definitionQuery = ""
-		
-	def removeWord word
-		BLINK.remove(word)
+	def updateWord word
+		L 'updateWord not set up'
+	def activateWordEdit word
+		editWord = word
+		wordQuery = word.name
+		definitionQuery = word.definition
 		imba.commit!
-		
-	def saveJson
-		JSONDB.setWords!
-	
-	def loadJson
-		L await JSONDB.loadWords!
-		
+	def saveWordEdit
+		newWord = {
+			id: editWord.id
+			stamp: stampString!
+			name: wordQuery
+			definition: definitionQuery
+		}
+		APP.updateWord newWord
+		editWord = {}
+		wordQuery = ""
+		definitionQuery = ""
+	def removeWord word
+		APP.remove(word)
+	def stampString
+		Date.now!.toString!
 	def render
 		<self>
 			css p:3sp
@@ -72,13 +109,12 @@ tag offline-dictionary
 			<p> "A starter template for incredibly fast offline web-apps {<br>} with session persistence via IndexedDB and manual JSON data backup."
 				css mb:4sp
 			<div>
-				css d:hflex g:1sp
-				
-				<button @dblclick.saveJson> "backup to JSON"
-				<button @dblclick.loadJson> "restore from JSON"
-				<button @dblclick.clear> "Double CLick to Clear Client Data"
-					css bg@hover:red1 @active:red3
-						c@hover:red8
+				css d:hflex g:1sp jc:end w:100%
+				# <button @click.saveJson> "backup to JSON"
+				# <button @dblclick.loadJson> "restore from JSON (dblclick)"
+				<button @dblclick.clearAll> "Clear All Data (double click)"
+					css bg:red1 @hover:red2 @active:red6
+						c@hover:red9
 			<div>
 				css d:hflex g:1sp
 				<div>
@@ -86,40 +122,50 @@ tag offline-dictionary
 						input
 							px:1sp
 							py:1sp
-					<input bind=wordQuery @keydown.enter=addWord placeholder="new word | search">
-					<input bind=definitionQuery @keydown.enter=addWord placeholder="definition">
+					<input bind=wordQuery @keydown.enter.addOrSaveWord
+					placeholder="new word | search">
+					<input bind=definitionQuery @keydown.enter.addOrSaveWord placeholder="definition | search">
+					
 					# FIXME: Clicking on Add Button doesn't have same effect as hitting Enter.
-					<button @dblclick.addWord> 
-						css h:100%
-							w:150px
-							bg:hue5 @hover:hue4 @active:hue6
-							c:hue0
-							as:flex-end
-							fs:sm
-						"add"
-				<div>
-			<div>
+					if editWord.id is undefined
+						<button @click.addOrSaveWord> 
+							css h:100%
+								w:150px
+								bg:hue5 @hover:hue4 @active:hue6
+								c:hue0
+								as:flex-end
+								fs:sm
+							"add"
+					else
+						<button @click.addOrSaveWord> 
+							css h:100%
+								w:150px
+								hue:emerald
+								bg:hue5 @hover:hue4 @active:hue6
+								c:hue0
+								as:flex-end
+								fs:sm
+							"save"
+			<div> "{APP.filtered_words.length} words"
 			for word in APP.filtered_words
-				<%card @dblclick.removeWord(word)> 
+				<%card> 
 					css d:vflex g:1sp
 						bg:white p:2sp
 						pos:relative
 					<.id> word.id
 						css fs:xxs c:gray2
-					<info>
+					<.info>
 						<h3> word.name
 							css fw:bold
 						<p> word.definition
 					# TODO: Make button to edit
-					<button> "✏️"
+					<.button-group>
 						css pos:absolute
-							p:0
-							r:1sp
-							t:1sp
-							bg@hover:hue1
-							cursor:pointer
-							bd:2px solid hue1
-							s:3sp
-							d:flex jac:center
+							t:1sp r:1sp
+							d:hflex g:1sp
+							button
+								bd:1px solid gray2
+						<button @click.activateWordEdit(word)> "✏️"
+						<button @dblclick.removeWord(word)> "x"
 
 imba.mount <offline-dictionary>, document.getElementById('app')

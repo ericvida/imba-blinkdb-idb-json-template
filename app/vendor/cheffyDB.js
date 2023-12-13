@@ -1,4 +1,4 @@
-// Eric: I modified all JSON.stringify(...) to JSON.stringify(..., null, 4) to make the JSON file more readable.
+// I modified all JSON.stringify(...) to JSON.stringify(..., null, 4) to make the JSON file more readable.
 const fs = require("fs")
 const crypto = require('crypto');
 let encKey = null;

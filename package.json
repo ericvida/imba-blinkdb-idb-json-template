@@ -17,8 +17,10 @@
     "cheffydb": "^1.0.5",
     "express": "^4.18.2",
     "idbkeyvalue": "^1.0.3",
-    "imba": "^2.0.0-alpha.231",
-    "nanoid": "^5.0.3"
+    "imba": "^2.0.0-alpha.234",
+    "nanoid": "^5.0.3",
+    "normalize-text": "^2.4.1",
+    "simple-json-db": "^2.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21"
