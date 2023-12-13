@@ -1,3 +1,6 @@
+import JSON_FILE from './JSON/backup.json'
+import {openDB, insert as IDBinsert, get as IDBget} from 'idbkeyvalue'
+openDB()
 import {
 	clear,
 	count,
@@ -48,18 +51,32 @@ class APPDB
 		First time the app is loaded, it checks if there is any data in BlinkDB and if not, it loads data from JSON and also pushes it to the client APP state. (APP.words and APP.filtered_words)
 		###
 		initFromJson!
-
+	# def loadJSON
+	# 	### INFO:
+	# 	manually loads JSON to IDB
+	# 	###
+		
+		
 	def initFromJson
 		### INFO: 
 		If app state (words,stamp) is new
 		and blinkDB is empty
 		update both from JSON
 		###
-		let json = await fromJSON!
+		# let fromIDB = 
+		# L fromIDB
+		
+		
+		let idb_words = {}
+		if idb_words.length is 0
+			IDBinsert('words', JSON_FILE.words)
+		else
+			idb_words = await IDBget('words')
+		# let json = await fromJSON!
 		# INFO: update blinkDB from JSON
-		insertMany(wordsTable, json.words)
+		insertMany(wordsTable, idb_words)
 		# INFO: update APP.words from JSON
-		words = json.words
+		words = idb_words
 		# INFO: update APP.filtered_words sorted by BlinkDB
 		filtered_words = await many(wordsTable, {
 			sort: {
@@ -67,6 +84,7 @@ class APPDB
 				order: 'asc'
 			}
 		})
+		imba.commit!
 		
 	def remove wordObject
 		L 'removed', wordObject.id
@@ -90,13 +108,13 @@ class APPDB
 		3. save to JSON in same sorting (new to oldest)
 		###
 		await insert(wordsTable, newWord) 
-		persistBlink! # persists blink to APP.words APP.filtered_words & Json.words
+		persistBlink! # persists blink to APP.words APP.filtered_words & idb_words
 	def updateWord editWord
 		await upsert(wordsTable, editWord)
-		persistBlink! # persists blink to APP.words APP.filtered_words & Json.words
+		persistBlink! # persists blink to APP.words APP.filtered_words & idb_words
 		
-	def persistBlink # persists blink to APP.words & Json.words
-		# NOTE: APP.words are sorted by timestamp from new to old, to be stored in json that way as well. That way json.words[1].stamp shows time of the last update to the json file.
+	def persistBlink # persists blink to APP.words & idb_words
+		# NOTE: APP.words are sorted by timestamp from new to old, to be stored in json that way as well. That way idb_words[1].stamp shows time of the last update to the json file.
 		words = await many(wordsTable, {
 			sort: {
 				key: 'stamp'
@@ -111,30 +129,36 @@ class APPDB
 				order: 'asc'
 			}
 		})
-		# NOTE: persists words to JSON after Blink>words
-		try 
-			let res = await window.fetch('/save_words', {
-				method: 'POST'
-				headers: {
-					'Content-Type': 'application/json'
-				}
-				body: JSON.stringify {words}
-			})
-		catch e
-			console.error 'error', e
+		
+		# NOTE persist words to indexedDB
+		# save to indexedDB
+		IDBinsert('words', words)
+		L await IDBget('words')
+		
+		# # NOTE: persists words to JSON after Blink>words
+		# try 
+		# 	let res = await window.fetch('/save_words', {
+		# 		method: 'POST'
+		# 		headers: {
+		# 			'Content-Type': 'application/json'
+		# 		}
+		# 		body: JSON.stringify {words}
+		# 	})
+		# catch e
+		# 	console.error 'error', e
 		imba.commit!
 	def fromJSON
 		### NOTE: 
 		returns data from JSON
 		###
-		const res = await window.fetch('/load_words')
-		let data = await res.json()
+		# const res = await window.fetch('/load_words')
+		let data = JSON_FILE
 		imba.commit!
 		return data
 	
 	def lastJsonWordsUpdate
 		let json = await fromJSON!
-		return json.words[1].stamp
+		return idb_words[1].stamp
 	
 	def saveToJson
 		try

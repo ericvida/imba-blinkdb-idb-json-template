@@ -1,3 +1,4 @@
+import JSON_FILE from './JSON/backup.json'
 ### TODO:
 [ ] Add session persistence via IndexedDB instead
 [ ] and manual json load and backup
@@ -98,6 +99,16 @@ tag offline-dictionary
 		APP.remove(word)
 	def stampString
 		Date.now!.toString!
+	def dbStatus
+		if JSON_FILE.words[0].stamp < APP.words[0]..stamp
+			"json behind"
+		elif JSON_FILE.words[0].stamp < APP.words[0]..stamp
+			"idb behind"
+		else
+			"in sync"
+	def saveToJson
+		APP.saveToJson!
+		imba.commit!
 	def render
 		<self>
 			css p:3sp
@@ -113,11 +124,16 @@ tag offline-dictionary
 				css mb:4sp
 			<div>
 				css d:hflex g:1sp jc:end w:100%
-				# <button @click.saveJson> "backup to JSON"
-				# <button @dblclick.loadJson> "restore from JSON (dblclick)"
 				<button @dblclick.clearAll> "Clear All Data (double click)"
-					css bg:red1 @hover:red2 @active:red6
+					css bg:red0 @hover:red2 @active:red6
 						c@hover:red9
+				if dbStatus! is "json behind"
+					<button [] @click.saveToJson> "backup to JSON"
+						css @keyframes pulse
+							0% bg:red3 c:red9
+							50% bg:red4 c:red9
+							100% bg:red3 c:red9
+						css animation: pulse 1s infinite
 			<div>
 				css d:hflex g:1sp
 				<div>
@@ -149,7 +165,16 @@ tag offline-dictionary
 								as:flex-end
 								fs:sm
 							"save"
-			<div> "{APP.filtered_words.length} words"
+			<div> 
+				<span> "{APP.words.length} words " 
+				switch dbStatus!
+					when "json behind"
+						<span> "🟠 json behind"
+					when "idb behind"
+						<span> "🔴 idb behind json"
+					else
+						<span> "🟢"
+			
 			for word in APP.filtered_words
 				<%card> 
 					css d:vflex g:1sp

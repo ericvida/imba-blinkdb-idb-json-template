@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "blinkdb": "^0.14.0",
-    "cheffydb": "^1.0.5",
     "express": "^4.18.2",
     "idbkeyvalue": "^1.0.3",
     "imba": "^2.0.0-alpha.234",
