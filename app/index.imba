@@ -1,10 +1,7 @@
-import JSON_FILE from './JSON/backup.json'
-### TODO:
-[ ] Add session persistence via IndexedDB instead
-[ ] and manual json load and backup
-###
 import 'imba/preflight.css'
+import JSON_FILE from './JSON/backup.json'
 import {normalizeText as normalize} from 'normalize-text'
+
 global css 
 	@root 
 		fs:sm
@@ -116,11 +113,11 @@ tag offline-dictionary
 				c:cool9
 				d:vflex g:1sp
 				mih:100vh
-			<h1> "Imba + BlinkDB + JSON Persistence"
+			<h1> "Imba + BlinkDB + IDB + JSON"
 				css fs:4xl
 					fw:bold
 					ff:sans
-			<p> "A starter template for incredibly fast offline web-apps {<br>} with session persistence via JSON and manual JSON data backup."
+			<p> "A starter template for incredibly fast offline web-apps {<br>} with session persistence via IDB and JSON."
 				css mb:4sp
 			<div>
 				css d:hflex g:1sp jc:end w:100%
