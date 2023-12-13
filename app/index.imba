@@ -16,8 +16,7 @@ global css
 		c:cool8 @hover:hue8
 	* rd:0.5sp
 import {nanoid} from 'nanoid'
-import './DB_BLINK'
-import './DB_APP'
+import './API.imba'
 
 tag offline-dictionary
 	# NOTE: EXPERIMENTAL BELOW
