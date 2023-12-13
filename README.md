@@ -1,9 +1,9 @@
 _Bootstrapped with [imba-base-template](https://github.com/imba/imba-base-template)._
 
-# Imba + BlinkDB
+# Imba + BlinkDB + JSON persistence
 An [Imba](https://imba.io) starter template with [BlinkDB](https://blinkdb.io/) for blazing fast client-side data, and json file persistence
 
-![CleanShot 2023-11-29 at 17 00 40@2x](https://github.com/ericvida/imba-blinkdb-json-template/assets/13579055/37dad601-3210-43a6-8b42-322d004fa4fb)
+![CleanShot 2023-12-13 at 11 47 52](https://github.com/ericvida/imba-blinkdb-template/assets/13579055/6626958a-abc2-41ca-878c-21cbc2b5f9b7)
 
 It's perfect for creating offline data json data management apps.
 Or for quickly building client-side app.
